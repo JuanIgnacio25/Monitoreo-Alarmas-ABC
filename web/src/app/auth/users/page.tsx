@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getUsers } from "./users.api";
 
-function usersPage() {
+function UsersPage() {
   interface User {
     id: number;
     email: string;
@@ -34,4 +34,4 @@ function usersPage() {
   );
 }
 
-export default usersPage;
+export default UsersPage;
