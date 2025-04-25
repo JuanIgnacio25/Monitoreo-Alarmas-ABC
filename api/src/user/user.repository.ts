@@ -40,7 +40,7 @@ export class UserRepository {
     });
 
     if (!findedUser) {
-      throw new NotFoundException(`User with email ${email} not found`);
+      return undefined;
     }
 
     return this.mapToEntity(findedUser);
