@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable , UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -10,12 +12,25 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<User | null> {
+  async validateUser(
+    email: string,
+    passwordPlainText: string,
+  ): Promise<User | null> {
     const user = await this.userService.findByEmail(email);
-    if (user && user.password === password) {
-      
+
+    if(!user) {
+      throw new UnauthorizedException(`Invalid credentials`);
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      passwordPlainText,
+      user.password,
+    );
+
+    if (isPasswordValid) {
       return user;
     }
+
     return null;
   }
 
