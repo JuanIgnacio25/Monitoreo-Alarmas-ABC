@@ -32,6 +32,21 @@ export class UserRepository {
     return this.mapToEntity(findedUser);
   }
 
+  async findByEmail(email: string): Promise<User | undefined> {
+    const findedUser = await this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!findedUser) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return this.mapToEntity(findedUser);
+  }
+  
+
   async create(user: CreateUserDto): Promise<User> {
     console.log(user);
     const createdUser = await this.prismaService.user.create({
