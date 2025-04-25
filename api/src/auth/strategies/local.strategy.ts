@@ -1,9 +1,9 @@
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 import { User } from 'src/user/entities/user.entity';
-import { LoginDataDto } from './dto/login-data-dto';
+import { LoginDataDto } from '../dto/login-data-dto';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
