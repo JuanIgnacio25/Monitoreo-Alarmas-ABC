@@ -1,8 +1,18 @@
-import { IsEmail, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, IsStrongPassword } from "class-validator";
 
 export class CreateUserDto {
-  @IsEmail()
-  email: string
+  @IsNotEmpty()
   @IsString()
-  password: string
+  @IsEmail()
+  readonly email: string
+
+  @IsNotEmpty()
+  @IsString()
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+  }, {message: 'Password must contain at least 8 characters, 1 lowercase letter, 1 uppercase letter, and 1 number'})
+  readonly password: string
 }
