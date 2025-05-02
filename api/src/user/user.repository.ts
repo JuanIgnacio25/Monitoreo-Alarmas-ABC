@@ -56,6 +56,15 @@ export class UserRepository {
     });
   }
 
+  async updateIdReferenceRefreshToken(id: number, refreshTokenId: number | null) {
+    const updatedUser = await this.prismaService.user.update({
+      where: { id },
+      data: { refreshTokenId },
+    });
+
+    return this.mapToEntity(updatedUser);
+  }
+
   private mapToEntity(userData: UserInterface): User {
     const user = new User();
     user.id = userData.id;

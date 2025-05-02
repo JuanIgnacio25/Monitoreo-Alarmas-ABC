@@ -50,6 +50,10 @@ export class UserService {
     return `This action updates a #${id} user`;
   }
 
+  updateIdReferenceRefreshToken(id: number, refreshTokenId: number | null) {
+    return this.userRepository.updateIdReferenceRefreshToken(id, refreshTokenId);
+  }
+
   async remove(id: number) {
     return await this.userRepository.remove(id);
   }
