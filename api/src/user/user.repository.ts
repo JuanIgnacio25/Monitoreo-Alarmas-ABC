@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
-import { UserInterface } from './interfaces/user.interface';
 
 @Injectable()
 export class UserRepository {
@@ -10,7 +9,7 @@ export class UserRepository {
 
   async findAll(): Promise<User[]> {
     const findedUsers = await this.prismaService.user.findMany();
-    return findedUsers.map((usr) => this.mapToEntity(usr));
+    return findedUsers.map((usr) => new User(usr));
   }
 
   async findOne(id: number): Promise<User | undefined> {
@@ -24,7 +23,7 @@ export class UserRepository {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    return this.mapToEntity(findedUser);
+    return new User(findedUser);
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
@@ -38,14 +37,14 @@ export class UserRepository {
       return undefined;
     }
 
-    return this.mapToEntity(findedUser);
+    return new User(findedUser);
   }
 
   async create(user: CreateUserDto): Promise<User> {
     const createdUser = await this.prismaService.user.create({
       data: user,
     });
-    return this.mapToEntity(createdUser);
+    return new User(createdUser);
   }
 
   async remove(id: number) {
@@ -62,16 +61,6 @@ export class UserRepository {
       data: { refreshTokenId },
     });
 
-    return this.mapToEntity(updatedUser);
-  }
-
-  private mapToEntity(userData: UserInterface): User {
-    const user = new User();
-    user.id = userData.id;
-    user.email = userData.email;
-    user.password = userData.password;
-    user.role = userData.role;
-    user.phone = userData.phone;
-    return user;
+    return new User(updatedUser);
   }
 }
