@@ -90,7 +90,7 @@ export class AuthService {
     };
   }
 
-  async logout(refreshToken: string, userId: string): Promise<void> {
+  async logout(refreshToken: string, userId: number): Promise<void> {
     const refreshTokenData = await this.refreshTokenService.findRefreshToken(refreshToken);
     
     if(!refreshTokenData || refreshTokenData.userId !== userId) {

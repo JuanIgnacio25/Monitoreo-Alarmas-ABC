@@ -18,6 +18,7 @@ import { RefreshTokenDto } from 'src/refresh-token/dto/refresh_token.dto';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { GetUser } from '@common/decorators/get-users.decorator';
+import { AuthenticatedUser } from '@common/interfaces/authenticated-user.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -92,7 +93,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Delete('/logout')
   async logout(
-    @GetUser() user,
+    @GetUser() user: AuthenticatedUser,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
@@ -113,7 +114,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@GetUser() user) {
+  getProfile(@GetUser() user: AuthenticatedUser) {
     return user;
   }
 }
