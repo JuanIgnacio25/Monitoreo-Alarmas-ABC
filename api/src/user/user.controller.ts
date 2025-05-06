@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Roles } from '@common/decorators/roles.decorator';
 import { RolesGuard } from '@common/guards/roles.guard';
 import { UserRole } from '@common/enums/user-role.enum';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard,RolesGuard)
@@ -14,12 +15,12 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() user: CreateUserDto) {
+  create(@Body() user: CreateUserDto): Promise<UserResponseDto> {
     return this.userService.create(user);
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<UserResponseDto[]> {
     return this.userService.findAll();
   }
 

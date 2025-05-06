@@ -1,9 +1,10 @@
-import {Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
 import { User } from './entities/user.entity';
+import { UserResponseDto } from './dto/user-response.dto';
 
 import * as bcrypt from 'bcrypt';
 
@@ -11,11 +12,13 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
-  async create(userDto: CreateUserDto): Promise<User> {
+  async create(userDto: CreateUserDto): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findByEmail(userDto.email);
 
     if (existingUser) {
-      throw new ConflictException(`User with email ${userDto.email} already exists`)
+      throw new ConflictException(
+        `User with email ${userDto.email} already exists`,
+      );
     }
 
     const hashedPassword = await this.hashPassword(userDto.password);
@@ -25,7 +28,13 @@ export class UserService {
     };
     const createdUser = await this.userRepository.create(user);
 
-    return createdUser;
+    return new UserResponseDto(
+      createdUser.id,
+      createdUser.email,
+      createdUser.address,
+      createdUser.phone,
+      createdUser.address,
+    );
   }
 
   private async hashPassword(password: string): Promise<string> {
@@ -34,15 +43,30 @@ export class UserService {
     return hashedPassword;
   }
 
-  async findAll() {
-    return await this.userRepository.findAll();
+  async findAll(): Promise<UserResponseDto[]> {
+    const users = await this.userRepository.findAll();
+    return users.map(
+      (user) =>
+        new UserResponseDto(
+          user.id,
+          user.email,
+          user.role,
+          user.phone,
+          user.address,
+        ),
+    );
   }
 
-  async findOne(id: number) {
-    return this.userRepository.findOne(id);
+  async findOne(id: number): Promise<UserResponseDto> {
+    const user = await this.userRepository.findOne(id);
+
+    if(!user) {
+      throw new NotFoundException(`User with ID ${id} not found`)
+    }
+    return new UserResponseDto(user.id,user.email,user.phone,user.role,user.address);
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<User | undefined> {
     return await this.userRepository.findByEmail(email);
   }
 
@@ -51,7 +75,10 @@ export class UserService {
   }
 
   updateIdReferenceRefreshToken(id: number, refreshTokenId: number | null) {
-    return this.userRepository.updateIdReferenceRefreshToken(id, refreshTokenId);
+    return this.userRepository.updateIdReferenceRefreshToken(
+      id,
+      refreshTokenId,
+    );
   }
 
   async remove(id: number) {

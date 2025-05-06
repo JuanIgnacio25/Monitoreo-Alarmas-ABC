@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
@@ -20,7 +20,7 @@ export class UserRepository {
     });
 
     if (!findedUser) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      return undefined;
     }
 
     return new User(findedUser);
@@ -55,7 +55,10 @@ export class UserRepository {
     });
   }
 
-  async updateIdReferenceRefreshToken(id: number, refreshTokenId: number | null) {
+  async updateIdReferenceRefreshToken(
+    id: number,
+    refreshTokenId: number | null,
+  ) {
     const updatedUser = await this.prismaService.user.update({
       where: { id },
       data: { refreshTokenId },
