@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { RefreshToken } from './entities/refreshToken.entity';
-import { RefreshTokenInterface } from './interfaces/refresh-token.interface';
 
 @Injectable()
 export class RefreshTokenRepository {
@@ -13,7 +12,7 @@ export class RefreshTokenRepository {
     expiresAt: Date;
   }): Promise<RefreshToken> {
     const createdRefreshToken = await this.prisma.refreshToken.create({ data });
-    return this.mapToEntity(createdRefreshToken);
+    return new RefreshToken(createdRefreshToken);
   }
 
   async findOne(token: string): Promise<RefreshToken | null> {
@@ -21,7 +20,7 @@ export class RefreshTokenRepository {
       where: { token },
     });
     if (!findedRefreshToken) return null;
-    return this.mapToEntity(findedRefreshToken);
+    return new RefreshToken(findedRefreshToken);
   }
 
   async findByUserId(userId: number): Promise<RefreshToken | null> {
@@ -29,7 +28,7 @@ export class RefreshTokenRepository {
       where: { userId },
     });
     if (!findedRefreshToken) return null;
-    return this.mapToEntity(findedRefreshToken);
+    return new RefreshToken(findedRefreshToken);
   }
 
   async updateByUserId(
@@ -41,23 +40,14 @@ export class RefreshTokenRepository {
       data,
     });
 
-    return this.mapToEntity(updatedRefreshToken);
+    return new RefreshToken(updatedRefreshToken);
   }
 
   async deleteByUserId(userId: number): Promise<RefreshToken | null> {
     const deletedRefreshToken = await this.prisma.refreshToken.delete({
       where: { userId },
     });
-    return this.mapToEntity(deletedRefreshToken);
+    return new RefreshToken(deletedRefreshToken);
   }
 
-  private mapToEntity(refreshTokenData: RefreshTokenInterface): RefreshToken {
-    const refreshToken = new RefreshToken();
-    refreshToken.id = refreshTokenData.id;
-    refreshToken.token = refreshTokenData.token;
-    refreshToken.userId = refreshTokenData.userId;
-    refreshToken.createdAt = refreshTokenData.createdAt;
-    refreshToken.expiresAt = refreshTokenData.expiresAt;
-    return refreshToken;
-  }
 }

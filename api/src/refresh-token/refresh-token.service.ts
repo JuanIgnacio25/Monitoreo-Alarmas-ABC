@@ -42,7 +42,7 @@ export class RefreshTokenService {
     return createHash('sha256').update(token).digest('hex');
   }
 
-  async findRefreshToken(token: string): Promise<any | null> {
+  async findRefreshToken(token: string): Promise<RefreshToken | null> {
     const hashedToken = this.hashToken(token);
 
     return this.refreshTokenRepository.findOne(hashedToken);
