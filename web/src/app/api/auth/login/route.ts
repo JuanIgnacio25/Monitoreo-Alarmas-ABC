@@ -25,9 +25,6 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     const setCookieHeader = res.headers["set-cookie"];
 
-
-    let newRefreshTokenValue = null;
-
     if (setCookieHeader) {
       // setCookieParser.parse maneja strings y arrays de strings automáticamente
       const parsedCookies = setCookieParser.parse(setCookieHeader, {
@@ -41,9 +38,6 @@ export async function POST(req: Request): Promise<NextResponse> {
         );
 
         if (refreshTokenCookieParsed) {
-          // Obtén el valor del token parseado
-          newRefreshTokenValue = refreshTokenCookieParsed.value;
-
           // Usa cookies().set() para setear la cookie
           (await cookies()).set({
             name: refreshTokenCookieParsed.name,
@@ -85,8 +79,8 @@ export async function POST(req: Request): Promise<NextResponse> {
     }
     
     return NextResponse.json({access_token:res.data.access_token});
-  } catch (error: any) {
-    console.log(error.response.data);
+  } catch (error: unknown) {
+    console.log({errorLoginApi:error});
 
     return NextResponse.json(
       { message: "Usuario o Contraseña incorrectos" },

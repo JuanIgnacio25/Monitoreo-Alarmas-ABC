@@ -18,7 +18,7 @@ export async function loginUser(payload: LoginPayload): Promise<string> {
     
     useAuthStore.getState().setAccessToken(res.data.access_token);
     return res.data.access_token;
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw error;
   }
 }
@@ -38,7 +38,9 @@ export async function refreshAccessToken(): Promise<string | null> {
     useAuthStore.getState().setAccessToken(newAccessToken);
 
     return newAccessToken;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.log({errorApits:error});
+    
     return null;
   }
 }

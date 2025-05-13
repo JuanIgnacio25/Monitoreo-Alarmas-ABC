@@ -19,6 +19,8 @@ export const isTokenExpiredOrAboutToExpire = (accessToken: string | null, expira
     // Comprueba si el token ha expirado o expirará en los próximos 'expirationThresholdSeconds' segundos
     return decodedToken.exp < currentTime + expirationThresholdSeconds;
   } catch (error) {
+    console.log({errorAuthUtils:error});
+    
     // El token no es válido o no se puede decodificar
     return true;
   }

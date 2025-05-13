@@ -45,13 +45,9 @@ function LoginForm() {
       // const router = useRouter();
       // router.push('/dashboard');
     } catch (error: any) {
-      if (error.status === 401) {
+        console.log({errorLoginForm:error});
+        
         setLoginError("Usuario o Contraseña incorrectos");
-      } else if (error.message) {
-        setLoginError(`Error al iniciar sesión: ${error.message}`);
-      } else {
-        setLoginError("Ocurrió un error inesperado al iniciar sesión.");
-      }
     }
   };
 

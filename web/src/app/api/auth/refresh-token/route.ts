@@ -31,8 +31,6 @@ export async function POST() {
 
     const setCookieHeader = res.headers["set-cookie"];
 
-    let newRefreshTokenValue = null;
-
     if (setCookieHeader) {
       // setCookieParser.parse maneja strings y arrays de strings automáticamente
       const parsedCookies = setCookieParser.parse(setCookieHeader, {
@@ -46,9 +44,6 @@ export async function POST() {
         );
 
         if (refreshTokenCookieParsed) {
-          // Obtén el valor del token parseado
-          newRefreshTokenValue = refreshTokenCookieParsed.value;
-
           // Usa cookies().set() para setear la cookie
           (await cookies()).set({
             name: refreshTokenCookieParsed.name,
@@ -93,13 +88,12 @@ export async function POST() {
       { access_token: res.data.access_token },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.log({errorRefreshToken:error});
+    
     // Usa cookies().delete()
     (await cookies()).delete("refreshToken");
 
-    const status = error.response?.status || 500;
-    const errorMessage =
-      error.response?.data?.message || error.message || "Internal Server Error";
-    return NextResponse.json({ message: errorMessage }, { status });
+    return NextResponse.json({message: 'Error al refrescar el token'} , {status: 400});
   }
 }
