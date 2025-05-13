@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   Delete,
   Get,
@@ -31,18 +30,17 @@ export class AuthController {
       req.user,
     );
 
-    // Establecer Refresh Token como cookie
     res.cookie('refreshToken', refresh_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
       maxAge:
         parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRATION_SECONDS || '604800') *
-        1000, // Ejemplo: 7 días en segundos
-      path: '/auth/refresh', // Solo se envía a esta ruta
+        1000,
+      path: '/',
     });
 
-    return { access_token }; // Devuelve el access_token en el body para que el frontend lo almacene
+    return { access_token };
   }
 
   @Post('/refresh')
@@ -53,12 +51,12 @@ export class AuthController {
 
     const refreshToken = req.cookies?.refreshToken;
 
-    const refreshTokenData = plainToInstance(RefreshTokenDto, {refreshToken});
-        const errors = await validate(refreshTokenData);
-    
-        if (errors.length > 0) {
-          throw new BadRequestException('Invalid Refresh token format');
-        }
+    const refreshTokenData = plainToInstance(RefreshTokenDto, { refreshToken });
+    const errors = await validate(refreshTokenData);
+
+    if (errors.length > 0) {
+      throw new BadRequestException('Invalid Refresh token format');
+    }
 
     try {
       const { access_token, refresh_token: newRefreshToken } =
@@ -82,7 +80,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        path: '/auth/refresh',
+        path: '/',
         expires: new Date(0), // Expira inmediatamente
       });
 
@@ -99,7 +97,7 @@ export class AuthController {
   ) {
 
     const refreshToken = req.cookies?.refreshToken;
-    
+
     if (!refreshToken) {
       throw new BadRequestException('Refresh token not found');
     }
@@ -107,7 +105,7 @@ export class AuthController {
     await this.authService.logout(refreshToken, user.userId);
 
     // Limpiar solo la cookie del Refresh Token
-    res.clearCookie('refreshToken', { path: '/auth/refresh' });
+    res.clearCookie('refreshToken', { path: '/' });
 
     return { message: 'Logout successful' };
   }
