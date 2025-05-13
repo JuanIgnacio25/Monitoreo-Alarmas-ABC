@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 import axios from "axios";
 import setCookieParser from "set-cookie-parser";
 
+import { handleApiRouteError } from "@/lib/utils/error-handler-server";
+
 interface LoginPayload {
   email: string;
   password: string;
@@ -80,11 +82,6 @@ export async function POST(req: Request): Promise<NextResponse> {
     
     return NextResponse.json({access_token:res.data.access_token});
   } catch (error: unknown) {
-    console.log({errorLoginApi:error});
-
-    return NextResponse.json(
-      { message: "Usuario o Contraseña incorrectos" },
-      { status: 401 }
-    );
+    return handleApiRouteError(error,'Error la refrescar el token')
   }
 }

@@ -45,9 +45,7 @@ function LoginForm() {
       // const router = useRouter();
       // router.push('/dashboard');
     } catch (error: unknown) {
-        console.log({errorLoginForm:error});
-        
-        setLoginError("Usuario o Contraseña incorrectos");
+      setLoginError("Usuario o Contraseña incorrectos");
     }
   };
 

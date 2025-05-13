@@ -4,10 +4,12 @@ import { cookies } from "next/headers";
 import axios from "axios";
 import setCookieParser from "set-cookie-parser";
 
+import { handleApiRouteError } from "@/lib/utils/error-handler-server";
+
 export async function POST() {
   const cookieStore = await cookies();
   const token = cookieStore.get("refreshToken");
-  
+
   if (!token?.value) {
     // En caso de que la cookie de refresh no venga, limpia por si acaso y devuelve error
     cookieStore.delete("refreshToken");
@@ -89,11 +91,9 @@ export async function POST() {
       { status: 200 }
     );
   } catch (error: unknown) {
-    console.log({errorRefreshToken:error});
-    
     // Usa cookies().delete()
     (await cookies()).delete("refreshToken");
 
-    return NextResponse.json({message: 'Error al refrescar el token'} , {status: 400});
+    return handleApiRouteError(error, "Error al logear usuario");
   }
 }
