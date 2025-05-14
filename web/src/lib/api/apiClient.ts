@@ -35,6 +35,11 @@ api.interceptors.request.use(
       if (newAccessToken) {
         config.headers.Authorization = `Bearer ${newAccessToken}`;
       } else {
+        if(config.url === '/auth/logout'){
+          useAuthStore.getState().logout();
+          window.location.href = '/';
+          return Promise.reject('No se encuentra logeado');
+        }
         // Si la renovación falla con un mensaje de error
         useAuthStore.getState().logout();
         window.location.href = '/auth/login?error_message=auth_failed';
@@ -44,6 +49,11 @@ api.interceptors.request.use(
 
     if (accessToken && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    if(config.url === '/auth/logout'){
+      config.baseURL = '';
+      config.url = '/api/auth/logout';
     }
 
     return config;
