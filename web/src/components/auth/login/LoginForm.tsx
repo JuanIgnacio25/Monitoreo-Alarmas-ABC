@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { loginFormSchema, LoginFormValues } from "./loginSchema";
-import { loginUser } from "@/lib/api/api";
+import { loginUser, logout } from "@/lib/api/api";
 
 import useLoginRedirectMessage from "@/lib/hooks/useLoginRedirectMessage";
 
@@ -23,6 +24,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 
 function LoginForm() {
+  const router = useRouter();
+
   const [loginError, setLoginError] = useState<string | null>(null);
   const infoMessage = useLoginRedirectMessage();
 
@@ -41,13 +44,21 @@ function LoginForm() {
     try {
       await loginUser(values);
       console.log("Te logeaste Rey");
-      // import { useRouter } from 'next/navigation';
-      // const router = useRouter();
-      // router.push('/dashboard');
+      
+      router.push('/auth/profile');
     } catch (error: unknown) {
       setLoginError("Usuario o Contraseña incorrectos");
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      const res = await logout()
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="container min-h-[100vh] flex flex-col justify-center items-center">
@@ -58,6 +69,8 @@ function LoginForm() {
         <Link href={"/auth/profile"}>
           <Button>Profile</Button>
         </Link>
+          <Button onClick={handleLogout}>Logout</Button>
+
       </div>
       {/* --- Mostrar el mensaje informativo de la URL si existe --- */}
       {infoMessage && (
@@ -111,19 +124,11 @@ function LoginForm() {
               {/* Mostrar el error del submit del formulario si existe */}
               {loginError && <FormMessage>{loginError}</FormMessage>}
               <Button
-                className="w-full bg-blue-600 hover:bg-blue-800 hover:cursor-pointer" // Boton de ancho completo
+                className="w-full bg-blue-600 hover:bg-blue-800 hover:cursor-pointer"
                 type="submit"
               >
                 Iniciar Sesion
               </Button>
-              <div className="text-center mt-4">
-                <Link
-                  href="/auth/register"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  ¿No tienes cuenta? Regístrate
-                </Link>
-              </div>
             </form>
           </Form>
         </CardContent>

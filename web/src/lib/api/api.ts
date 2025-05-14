@@ -44,9 +44,21 @@ export async function refreshAccessToken(): Promise<string | null> {
   }
 }
 
+export async function logout(){
+  try {
+    const res = await api.post('/auth/logout',{});
+    useAuthStore.getState().logout();
+
+    return res.data;
+  } catch (error) {
+    throw error
+  }
+}
+
 export async function getUserProfile() {
   try {
     const res = await api.get("/auth/profile");
+    console.log(res.data);
     
     return res.data;
   } catch (error) {
