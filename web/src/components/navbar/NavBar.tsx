@@ -42,10 +42,9 @@ export default function Navbar({
   name = siteConfig.name,
   homeUrl = siteConfig.url,
   mobileLinks = [
-    { text: "Inicio", href: siteConfig.url },
-    { text: "Servicios", href: siteConfig.url },
-    { text: "Beneficios", href: siteConfig.url },
-    { text: "Contacto", href: siteConfig.url },
+    { text: "Servicios", href: `${siteConfig.url}/#servicios` },
+    { text: "Beneficios", href: `${siteConfig.url}/#beneficios` },
+    { text: "Contacto", href: `${siteConfig.url}/#contacto` },
   ],
   actions = [
     {
@@ -64,7 +63,7 @@ export default function Navbar({
       <div className="max-w-container relative mx-auto">
         <NavbarComponent>
           <NavbarLeft>
-            <a
+            <Link
               href={homeUrl}
               className="flex items-center gap-2 text-xl font-bold"
             >
@@ -75,7 +74,7 @@ export default function Navbar({
                 alt={"main logo"}
                 priority
               />
-            </a>
+            </Link>
             {showNavigation && <MainNav items={siteConfig.mainNav} />}
           </NavbarLeft>
           <NavbarRight>

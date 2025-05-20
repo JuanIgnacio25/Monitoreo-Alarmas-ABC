@@ -1,14 +1,17 @@
-"use client"
-
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Hero from "@/components/hero/Hero";
 
 export default function Home() {
-
   return (
-    <div className="container flex flex-col justify-center items-center">
-      <h1>Home Page</h1>
-      <Link href="/auth/login"><Button>Login</Button></Link>
+    <div className="w-full flex flex-col">
+      <Hero
+        title="Protegé tu hogar o negocio las 24 hs"
+        subtitle="Servicio profesional de monitoreo de alarmas con respuesta inmediata."
+        ctas={[
+          { label: "Monitorear mi alarma", href: "/#contacto" },
+          { label: "Nuestros Servicios", href: "/#servicios" },
+        ]}
+        backgroundImage="/assets/SafeFamily.jpg"
+      />
     </div>
   );
 }
