@@ -1,14 +1,17 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import Image from "next/image";
 
 import HeroContent from "./HeroContent";
 import HeroWords from "./HeroWords";
 
-interface HeroProps {
+interface CTA {
+  label: string,
+  href: string  
+}
+
+export interface HeroProps {
   title: string;
   subtitle: string;
-  ctas: { label: string; href: string }[];
+  ctas: CTA[];
   backgroundImage: string;
 }
 
@@ -30,11 +33,11 @@ export default function Hero({
           quality={80}
           priority
         />
-        <div className="absolute inset-0 bg-blue-900/70" />
+        <div className="absolute inset-0 bg-blue-900/60" />
       </div>
 
       <div className="h-full w-full flex flex-col md:flex-row justify-center md:justify-start items-center text-white px-4 md:px-12 ">
-        <HeroContent />
+        <HeroContent title={title} subtitle={subtitle} ctas={ctas}/>
         <HeroWords />
       </div>
     </section>

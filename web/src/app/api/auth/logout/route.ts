@@ -4,7 +4,7 @@ import { cookies, headers } from "next/headers";
 import axios from "axios";
 import { handleApiRouteError } from "@/lib/utils/error-handler-server";
 
-export async function POST(req: Request): Promise<NextResponse> {
+export async function POST(): Promise<NextResponse> {
   const cookieStore = await cookies();
   const token = cookieStore.get("refreshToken");
   const authorizationHeader = (await headers()).get('authorization');

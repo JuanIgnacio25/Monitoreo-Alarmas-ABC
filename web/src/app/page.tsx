@@ -7,7 +7,7 @@ export default function Home() {
         title="Protegé tu hogar o negocio las 24 hs"
         subtitle="Servicio profesional de monitoreo de alarmas con respuesta inmediata."
         ctas={[
-          { label: "Monitorear mi alarma", href: "/#contacto" },
+          { label: "Empezar a protegerme", href: "/#contacto" },
           { label: "Nuestros Servicios", href: "/#servicios" },
         ]}
         backgroundImage="/assets/SafeFamily.jpg"
