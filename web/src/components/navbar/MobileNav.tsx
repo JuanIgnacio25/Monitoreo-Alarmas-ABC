@@ -33,7 +33,7 @@ export function MobileNav({ name, homeUrl, mobileLinks }: MobileNavProps) {
           <span className="sr-only">Toggle navigation menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right">
+      <SheetContent side="left">
         <VisuallyHidden.Root>
           <SheetTitle>Menú de Navegación Móvil</SheetTitle>
         </VisuallyHidden.Root>

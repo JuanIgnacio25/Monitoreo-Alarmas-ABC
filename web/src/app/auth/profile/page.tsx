@@ -11,7 +11,11 @@ function ProfilePage() {
   useEffect(() => {
     console.log({ profile: accessToken });
 
-    getUserProfile();
+    try {
+      getUserProfile();
+    } catch (error) {
+      console.log(error);
+    }
   }, [accessToken]);
   return (
     <div className="flex flex-col justify-center items-center gap-2">
