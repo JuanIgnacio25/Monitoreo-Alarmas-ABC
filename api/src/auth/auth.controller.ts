@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Controller,
-  Delete,
   Get,
   Post,
   Req,
@@ -89,11 +88,10 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('/logout')
+  @Post('/logout')
   async logout(
     @GetUser() user: AuthenticatedUser,
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
   ) {
 
     const refreshToken = req.cookies?.refreshToken;
@@ -103,9 +101,6 @@ export class AuthController {
     }
 
     await this.authService.logout(refreshToken, user.userId);
-
-    // Limpiar solo la cookie del Refresh Token
-    res.clearCookie('refreshToken', { path: '/' });
 
     return { message: 'Logout successful' };
   }
